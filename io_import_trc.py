@@ -26,8 +26,8 @@ bl_info = {
     'location': 'File > Import > Motion capture (.trc)',
     'description': 'Import TRC motion capture files (.trc)',
     'warning': 'In development.',
-    'wiki_url': 'http://www.blender.org', # TODO
-    'tracker_url': 'http://www.blender.org', # TODO
+    'wiki_url': 'https://github.com/lancelet/blender-trc-importer/wiki',
+    'tracker_url': 'https://github.com/lancelet/blender-trc-importer/issues',
     'support': 'TESTING',
     'category': 'Import-Export',
 }

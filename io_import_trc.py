@@ -131,8 +131,8 @@ def import_trc(context, filepath):
         obj = bpy.context.active_object
         # name it and set properties
         obj.name = marker_name
-        obj.empty_draw_type = "CIRCLE"  # TODO: Option?
-        obj.empty_draw_size = SCALE * 10
+        obj.empty_draw_type = "SPHERE"  # TODO: Option?
+        obj.empty_draw_size = SCALE * 20
         # create animation action and fcurves
         obj.animation_data_create()
         obj.animation_data.action = bpy.data.actions.new(name="MocapAction")
@@ -140,24 +140,33 @@ def import_trc(context, filepath):
         fcu_x = act.fcurves.new(data_path="location", index = 0)
         fcu_y = act.fcurves.new(data_path="location", index = 1)
         fcu_z = act.fcurves.new(data_path="location", index = 2)
+        fcu_h = act.fcurves.new(data_path="hide")
+        fcu_r = act.fcurves.new(data_path="hide_render")
         # allocate keyframes
         m = data.markers[marker_name]
         n_frames = len(m)
-        fcu_x.keyframe_points.add(n_frames)
-        fcu_y.keyframe_points.add(n_frames)
-        fcu_z.keyframe_points.add(n_frames)
+        n_loc_frames = len([x for x in m if x is not None])
+        fcu_x.keyframe_points.add(n_loc_frames)
+        fcu_y.keyframe_points.add(n_loc_frames)
+        fcu_z.keyframe_points.add(n_loc_frames)
+        fcu_h.keyframe_points.add(n_frames)
+        fcu_r.keyframe_points.add(n_frames)
         # set keyframes
         index = 0
+        keyframe_index = 0
         index_to_time = bpy.context.scene.render.fps / data.camera_rate
         for v in m:
             time = index * index_to_time
             if v is not None:
-                fcu_x.keyframe_points[index].co = time, v[0] * SCALE
-                fcu_y.keyframe_points[index].co = time, v[1] * SCALE
-                fcu_z.keyframe_points[index].co = time, v[2] * SCALE
+                fcu_x.keyframe_points[keyframe_index].co = time, v[0] * SCALE
+                fcu_y.keyframe_points[keyframe_index].co = time, v[1] * SCALE
+                fcu_z.keyframe_points[keyframe_index].co = time, v[2] * SCALE
+                fcu_h.keyframe_points[index].co = time, 0
+                fcu_r.keyframe_points[index].co = time, 0
+                keyframe_index = keyframe_index + 1
             else:
-                pass
-                # TODO: set visibility
+                fcu_h.keyframe_points[index].co = time, 1
+                fcu_r.keyframe_points[index].co = time, 1
             index = index + 1
 
 

@@ -151,6 +151,7 @@ def import_trc(context, filepath):
         fcu_z.keyframe_points.add(n_loc_frames)
         fcu_h.keyframe_points.add(n_frames)
         fcu_r.keyframe_points.add(n_frames)
+        fcus = [fcu_x, fcu_y, fcu_z, fcu_h, fcu_r]
         # set keyframes
         index = 0
         keyframe_index = 0
@@ -168,6 +169,9 @@ def import_trc(context, filepath):
                 fcu_h.keyframe_points[index].co = time, 1
                 fcu_r.keyframe_points[index].co = time, 1
             index = index + 1
+        for fcu in fcus:
+            fcu.extrapolation = "CONSTANT"
+            fcu.lock = True
 
 
 class IMPORT_OT_mocap_trc(Operator, ImportHelper):
